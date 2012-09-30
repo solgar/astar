@@ -47,6 +47,9 @@ public class AStar
 
 			AStarNode neighbour = null;
 			while ((neighbour = dataProvider.nextNeighbour(current)) != null) {
+				if (neighbour.parent != null)
+					continue;
+
 				neighbour.parent = current;
 				neighbour.steps = current.steps + 1;
 				neighbour.distance = Math.sqrt(Math.pow(neighbour.x - endX, 2) + Math.pow(neighbour.y - endY, 2));
