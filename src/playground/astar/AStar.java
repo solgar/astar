@@ -9,46 +9,40 @@ public class AStar
 	private PriorityQueue<AStarNode> closedSet;
 	private AStarDataProvider dataProvider;
 
-	private int startX = -1;
-	private int startY = -1;
-	private int endX = -1;
-	private int endY = -1;
-
-	public AStar() {
+	public AStar(AStarDataProvider dataProvider) {
+		this.dataProvider = dataProvider;
 		openSet = new PriorityQueue<AStarNode>();
 		closedSet = new PriorityQueue<AStarNode>();
 	}
 
-	public void setStartingPoint(int x, int y) {
-		startX = x;
-		startY = y;
-	}
-
-	public void setDestinationPoint(int x, int y) {
-		endX = x;
-		endY = y;
-	}
-
 	public Vector<AStarNode> find() {
-		AStarNode start = new AStarNode();
+		AStarNode startNode = dataProvider.getStartNode();
+		AStarNode destinationNode = dataProvider.getDestinationNode();
+		AStarNode lastNode = null;
 		boolean pathFound = false;
-		start.x = startX;
-		start.y = startY;
-		openSet.add(start);
+		int endX = destinationNode.x;
+		int endY = destinationNode.y;
+
+		openSet.clear();
+		closedSet.clear();
+		openSet.add(startNode);
 
 		while (!openSet.isEmpty()) {
 			AStarNode current = openSet.poll();
 			closedSet.add(current);
+			lastNode = current;
 
-			if (current.x == endX && current.y == endY) {
+			if (current == destinationNode) {
+				lastNode = current;
 				pathFound = true;
 				break;
 			}
 
 			AStarNode neighbour = null;
 			while ((neighbour = dataProvider.nextNeighbour(current)) != null) {
-				if (neighbour.parent != null)
+				if (neighbour.parent != null || neighbour == startNode) {
 					continue;
+				}
 
 				neighbour.parent = current;
 				neighbour.steps = current.steps + 1;
@@ -59,8 +53,8 @@ public class AStar
 
 		if (pathFound) {
 			Vector<AStarNode> path = new Vector<AStarNode>();
-			AStarNode current = closedSet.poll();
-			while (current != start) {
+			AStarNode current = lastNode;
+			while (current != null) {
 				path.add(current);
 				current = current.parent;
 			}
