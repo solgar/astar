@@ -54,7 +54,7 @@ public class AStar
 		if (pathFound) {
 			Vector<AStarNode> path = new Vector<AStarNode>();
 			AStarNode current = lastNode;
-			while (current != null) {
+			while (current != startNode) {
 				path.add(current);
 				current = current.parent;
 			}
