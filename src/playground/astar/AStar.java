@@ -5,9 +5,12 @@ import java.util.Vector;
 
 public class AStar
 {
-	private PriorityQueue<AStarNode> openSet;
-	private PriorityQueue<AStarNode> closedSet;
+	public  PriorityQueue<AStarNode> openSet;
+	public PriorityQueue<AStarNode> closedSet;
 	private AStarDataProvider dataProvider;
+
+	public int stopAfter = -1;
+	public boolean pathComplete = false;
 
 	public AStar(AStarDataProvider dataProvider) {
 		this.dataProvider = dataProvider;
@@ -23,6 +26,8 @@ public class AStar
 		int endX = destinationNode.x;
 		int endY = destinationNode.y;
 
+		pathComplete = false;
+
 		openSet.clear();
 		closedSet.clear();
 		openSet.add(startNode);
@@ -35,6 +40,7 @@ public class AStar
 			if (current == destinationNode) {
 				lastNode = current;
 				pathFound = true;
+				pathComplete = true;
 				break;
 			}
 
@@ -49,6 +55,11 @@ public class AStar
 				neighbour.distance = Math.sqrt(Math.pow(neighbour.x - endX, 2) + Math.pow(neighbour.y - endY, 2));
 				neighbour.calculateCost();
 				openSet.add(neighbour);
+			}
+
+			if (stopAfter != -1 && closedSet.size() >= stopAfter) {
+				pathFound = true;
+				break;
 			}
 		}
 
