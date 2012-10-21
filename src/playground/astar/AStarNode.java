@@ -5,7 +5,9 @@ public class AStarNode implements Comparable<AStarNode> {
 	public int y;
 	public int steps = 0;
 	public double distance = 0;
+	public double additionalCost = 0;
 	public AStarNode parent = null;
+	public double cost = Double.NaN;
 
 	public AStarNode() {
 		this(-1, -1);
@@ -17,15 +19,17 @@ public class AStarNode implements Comparable<AStarNode> {
 	}
 
 	public double getCost() {
-		return steps + distance;
+		return cost;
+	}
+
+	void calculateCost() {
+		cost = steps + distance + additionalCost;
 	}
 
 	public int compareTo(AStarNode node) {
-		double cost = node.getCost();
-		double myCost = getCost();
-		if (cost < myCost)
+		if (node.cost < this.cost)
 			return 1;
-		else if (cost == myCost)
+		else if (node.cost == this.cost)
 			return 0;
 		else
 			return -1;

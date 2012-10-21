@@ -47,6 +47,7 @@ public class AStar
 				neighbour.parent = current;
 				neighbour.steps = current.steps + 1;
 				neighbour.distance = Math.sqrt(Math.pow(neighbour.x - endX, 2) + Math.pow(neighbour.y - endY, 2));
+				neighbour.calculateCost();
 				openSet.add(neighbour);
 			}
 		}
